@@ -7,7 +7,7 @@ interface UserAttributes {
   lastName?: string;
   email?: string;
   password?: string;
-  refrashToken?: string | null;
+  refreshToken?: string | null;
   displayName?: string | null;
   photoURL?: string | null | undefined;
   bio?: string | null;
@@ -35,7 +35,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public lastName!: string;
   public email!: string;
   public password!: string;
-  public refrashToken!: string | null;
+  public refreshToken!: string | null;
   public displayName!: string | null;
   public photoURL!: string | null | undefined;
   public bio!: string | null;
@@ -80,7 +80,7 @@ User?.init(
       allowNull: false,
       type: DataTypes.STRING,
     },
-    refrashToken: {
+    refreshToken: {
       allowNull: true,
       type: DataTypes.STRING,
     },
@@ -99,14 +99,17 @@ User?.init(
     followingCount: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "0",
     },
     followersCount: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "0",
     },
     likesCount: {
       type: DataTypes.STRING,
       allowNull: false,
+      defaultValue: "0",
     },
     youtube: {
       type: DataTypes.STRING,
