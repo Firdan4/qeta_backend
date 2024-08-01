@@ -23,6 +23,7 @@ module.exports = {
       },
       refreshToken: {
         type: Sequelize.STRING,
+        allowNull: true,
       },
       displayName: {
         type: Sequelize.STRING,
