@@ -8,6 +8,20 @@ interface UserAttributes {
   email?: string;
   password?: string;
   refrashToken?: string | null;
+  displayName?: string | null;
+  photoURL?: string | null | undefined;
+  bio?: string | null;
+  followingCount?: number;
+  followersCount?: number;
+  likesCount?: number;
+  youtube?: string | null;
+  instagram?: string | null;
+  tiktok?: string | null;
+  facebook?: string | null;
+  verifiedAccount?: boolean;
+  phoneNumber?: string;
+  token?: string;
+  isPublic?: boolean;
 
   createdAt?: Date;
   updatedAt?: Date;
@@ -22,6 +36,20 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public email!: string;
   public password!: string;
   public refrashToken!: string | null;
+  public displayName!: string | null;
+  public photoURL!: string | null | undefined;
+  public bio!: string | null;
+  public followingCount!: number;
+  public followersCount!: number;
+  public likesCount!: number;
+  public youtube!: string | null;
+  public instagram!: string | null;
+  public tiktok!: string | null;
+  public facebook!: string | null;
+  public verifiedAccount!: boolean;
+  public phoneNumber!: string;
+  public token!: string;
+  public isPublic!: boolean;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -55,6 +83,58 @@ User?.init(
     refrashToken: {
       allowNull: true,
       type: DataTypes.STRING,
+    },
+    displayName: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    photoURL: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    bio: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    followingCount: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    followersCount: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    likesCount: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    youtube: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    instagram: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    tiktok: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    facebook: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    verifiedAccount: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    isPublic: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
     },
   },
   {

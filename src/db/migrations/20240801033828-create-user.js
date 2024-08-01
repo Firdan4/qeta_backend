@@ -24,6 +24,58 @@ module.exports = {
       refreshToken: {
         type: Sequelize.STRING,
       },
+      displayName: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      photoURL: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      bio: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      followingCount: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      followersCount: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      likesCount: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      youtube: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      instagram: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      tiktok: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      facebook: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      verifiedAccount: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+      },
+      phoneNumber: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      isPublic: {
+        type: Sequelize.BOOLEAN,
+        allowNull: true,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
