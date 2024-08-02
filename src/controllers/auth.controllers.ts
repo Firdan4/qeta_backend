@@ -3,7 +3,11 @@ import createError from "http-errors";
 import User from "../db/models/user";
 import bcrypt from "bcryptjs";
 import { getUserByEmail } from "../services/userServices";
-import { comparePassword, hashPasswords } from "../libs/auth";
+import {
+  comparePassword,
+  generateAccessAndRefreshToken,
+  hashPasswords,
+} from "../libs/auth";
 export const getAllUser = async (req: Request, res: Response) => {
   return res.status(200).send({
     message: "API Get ALL User",
@@ -46,9 +50,31 @@ export const signIn = async (req: Request, res: Response) => {
       throw createError(401, "Invalid email or password.");
     }
 
+    const {
+      id,
+      password: userPassword,
+      refreshToken: userRefreshToken,
+      ...data
+    } = user.dataValues;
+
+    const { accessToken, refreshToken } = generateAccessAndRefreshToken({
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+
+    await User.update({ refreshToken }, { where: { id } });
+
+    // Set cookie untuk refresh token
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     return res.status(200).send({
       message: "API login",
-      user,
+      token: accessToken,
+      user: data,
     });
   } catch (error: any) {
     return res.status(error.status || 500).send({
