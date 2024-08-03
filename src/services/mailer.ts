@@ -7,6 +7,7 @@ interface EmailOptions {
   to: string;
   subject: string;
   text: string;
+  html: string;
 }
 
 export const sendEmail = async (emailOptions: EmailOptions) => {
@@ -23,6 +24,9 @@ export const sendEmail = async (emailOptions: EmailOptions) => {
         refreshToken: process.env.GMAIL_REFRESH_TOKEN,
         accessToken: accessToken?.token || "",
       },
+      tls: {
+        rejectUnauthorized: false,
+      },
     });
 
     const mailOptions = {
@@ -30,7 +34,7 @@ export const sendEmail = async (emailOptions: EmailOptions) => {
       to: emailOptions.to,
       subject: emailOptions.subject,
       text: emailOptions.text,
-      html: `<p>${emailOptions.text}</p>`,
+      html: `<p>${emailOptions.html}</p>`,
     };
 
     const result = await transport.sendMail(mailOptions);

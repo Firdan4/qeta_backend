@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { signUp, getAllUser, signIn } from "../controllers/auth.controllers";
+import {
+  signUp,
+  getAllUser,
+  signIn,
+  emailVerification,
+} from "../controllers/auth.controllers";
 import {
   validationLogin,
   validationRegistration,
@@ -9,5 +14,6 @@ const router = Router();
 
 router.post("/register", validationRegistration, signUp);
 router.post("/login", validationLogin, signIn);
+router.get("/emailVerification", emailVerification);
 
 export default router;

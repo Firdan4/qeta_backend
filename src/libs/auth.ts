@@ -1,9 +1,11 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { Response } from "express";
+import createError from "http-errors";
 dotenv.config();
 
-interface ManageTokenType {
+export interface ManageTokenType {
   email: string;
   firstName: string;
   lastName: string;
@@ -44,4 +46,22 @@ export const generateAccessAndRefreshToken = (data: ManageTokenType) => {
   const accessToken = accessTokens(data);
 
   return { accessToken, refreshToken };
+};
+
+export const accessTokenVerificationEmail = (email: string) => {
+  const accessToken = jwt.sign(
+    { email },
+    process.env.ACCESS_TOKEN_VERIFICATION_EMAIL_KEY!,
+    {
+      expiresIn: "1d",
+    }
+  );
+  return accessToken;
+};
+
+export const verificationEmail = (
+  token: string,
+  callback: jwt.VerifyCallback
+) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_VERIFICATION_EMAIL_KEY!, callback);
 };
