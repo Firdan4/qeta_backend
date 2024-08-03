@@ -4,6 +4,7 @@ import {
   getAllUser,
   signIn,
   emailVerification,
+  sendVerificationCode,
 } from "../controllers/auth.controllers";
 import {
   validationLogin,
@@ -13,7 +14,8 @@ import {
 const router = Router();
 
 router.post("/register", validationRegistration, signUp);
-router.post("/login", validationLogin, signIn);
+router.post("/login", validationLogin, signIn, sendVerificationCode);
+router.post("/sendVerivicationCode", sendVerificationCode);
 router.post("/emailVerification", emailVerification);
 
 export default router;

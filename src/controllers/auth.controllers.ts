@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import createError from "http-errors";
 import User from "../db/models/user";
 import bcrypt from "bcryptjs";
@@ -46,7 +46,11 @@ export const signUp = async (req: Request, res: Response) => {
   }
 };
 
-export const signIn = async (req: Request, res: Response) => {
+export const signIn = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { email, password } = req.body;
 
@@ -56,28 +60,7 @@ export const signIn = async (req: Request, res: Response) => {
       throw createError(401, "Invalid email or password.");
     }
 
-    const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
-
-    const tokenVerificationEmail = generateTokenVerificationCode(
-      email,
-      verificationCode
-    );
-
-    await User.update({ tokenVerificationEmail }, { where: { id: user.id } });
-
-    await sendEmail({
-      to: email,
-      subject: "Email Verification Code",
-      text: "Verify your email",
-      html: `
-      <p>Enter <b>${verificationCode}</b> in the app to verify your email address. This code will expire in <b>3 minutes</b>.</p>
-      <p>If you did not request this code, please ignore this email.</p>
-    `,
-    });
-
-    return res.status(200).send({
-      message: "Send code email verification successfully!",
-    });
+    next();
   } catch (error: any) {
     return res.status(error.status || 500).send({
       message: error.message || "Internal Error!",
@@ -109,10 +92,14 @@ export const emailVerification = async (req: Request, res: Response) => {
       );
     }
 
+    if (user.verifiedAccount) {
+      throw createError(404, "User already verification!");
+    }
+
     verificationEmail(user.tokenVerificationEmail, async (err, decoded) => {
       if (err) {
         return res.status(403).send({
-          message: "Code verification Expired!",
+          message: "Code verification expired!",
         });
       }
 
@@ -153,6 +140,43 @@ export const emailVerification = async (req: Request, res: Response) => {
         token: accessToken,
         data,
       });
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      message: error.message || "Internal Error!",
+    });
+  }
+};
+
+export const sendVerificationCode = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      throw createError(400, "Email is required!");
+    }
+
+    const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
+
+    const tokenVerificationEmail = generateTokenVerificationCode(
+      email,
+      verificationCode
+    );
+
+    await User.update({ tokenVerificationEmail }, { where: { email } });
+
+    await sendEmail({
+      to: email,
+      subject: "Email Verification Code",
+      text: "Verify your email",
+      html: `
+      <p>Enter <b>${verificationCode}</b> in the app to verify your email address. This code will expire in <b>3 minutes</b>.</p>
+      <p>If you did not request this code, please ignore this email.</p>
+    `,
+    });
+
+    return res.status(200).send({
+      message: "Send code email verification successfully!",
     });
   } catch (error: any) {
     return res.status(error.status || 500).send({
