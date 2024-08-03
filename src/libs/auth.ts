@@ -48,12 +48,12 @@ export const generateAccessAndRefreshToken = (data: ManageTokenType) => {
   return { accessToken, refreshToken };
 };
 
-export const accessTokenVerificationEmail = (email: string) => {
+export const generateTokenVerificationCode = (email: string, code: string) => {
   const accessToken = jwt.sign(
-    { email },
-    process.env.ACCESS_TOKEN_VERIFICATION_EMAIL_KEY!,
+    { email, code },
+    process.env.ACCESS_TOKEN_VERIFICATION_CODE_KEY!,
     {
-      expiresIn: "1d",
+      expiresIn: "3m",
     }
   );
   return accessToken;
@@ -63,5 +63,5 @@ export const verificationEmail = (
   token: string,
   callback: jwt.VerifyCallback
 ) => {
-  jwt.verify(token, process.env.ACCESS_TOKEN_VERIFICATION_EMAIL_KEY!, callback);
+  jwt.verify(token, process.env.ACCESS_TOKEN_VERIFICATION_CODE_KEY!, callback);
 };

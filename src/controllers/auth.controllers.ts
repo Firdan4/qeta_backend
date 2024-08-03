@@ -4,7 +4,7 @@ import User from "../db/models/user";
 import bcrypt from "bcryptjs";
 import { getUserByEmail } from "../services/userServices";
 import {
-  accessTokenVerificationEmail,
+  generateTokenVerificationCode,
   comparePassword,
   generateAccessAndRefreshToken,
   hashPasswords,
@@ -56,20 +56,27 @@ export const signIn = async (req: Request, res: Response) => {
       throw createError(401, "Invalid email or password.");
     }
 
-    const tokenVerificationEmail = accessTokenVerificationEmail(email);
+    const verificationCode = Math.floor(1000 + Math.random() * 9000).toString();
 
-    const result = await sendEmail({
+    const tokenVerificationEmail = generateTokenVerificationCode(
+      email,
+      verificationCode
+    );
+
+    await User.update({ tokenVerificationEmail }, { where: { id: user.id } });
+
+    await sendEmail({
       to: email,
-      subject: "Testing send email",
-      text: "Ini testing send email",
-      html: `<a href='${process.env.BEST_API_URL}/auth/emailVerification?token=${tokenVerificationEmail}'>Verification Token</a>`,
+      subject: "Email Verification Code",
+      text: "Verify your email",
+      html: `
+      <p>Enter <b>${verificationCode}</b> in the app to verify your email address. This code will expire in <b>3 minutes</b>.</p>
+      <p>If you did not request this code, please ignore this email.</p>
+    `,
     });
 
     return res.status(200).send({
-      message: "Send email verification successfully!",
-      // data: result,
-      // token: accessToken,
-      // user: data,
+      message: "Send code email verification successfully!",
     });
   } catch (error: any) {
     return res.status(error.status || 500).send({
@@ -79,30 +86,43 @@ export const signIn = async (req: Request, res: Response) => {
 };
 
 export const emailVerification = async (req: Request, res: Response) => {
-  const { token } = req.query;
-
-  if (typeof token !== "string") {
-    return res.status(400).send({
-      message: "Token is required!",
-    });
-  }
+  const { code, email } = req.body;
 
   try {
-    verificationEmail(token, async (err, decoded) => {
+    if (!code) {
+      throw createError(401, "Code verification is required!");
+    }
+
+    if (!email) {
+      throw createError(401, "Email is required!");
+    }
+    const user = await User.findOne({ where: { email } });
+
+    if (!user) {
+      throw createError(401, "User not found!");
+    }
+
+    if (!user.tokenVerificationEmail) {
+      throw createError(
+        404,
+        "User token verification email not found, please log in again or contact to admin"
+      );
+    }
+
+    verificationEmail(user.tokenVerificationEmail, async (err, decoded) => {
       if (err) {
-        throw createError(403, "Verification email invalid!");
+        return res.status(403).send({
+          message: "Code verification Expired!",
+        });
       }
 
-      if (!decoded) {
-        throw createError(403, "Token verification invalid!");
-      }
+      const { email, code: codeToken } = decoded as jwt.JwtPayload &
+        ManageTokenType;
 
-      const { email } = decoded as jwt.JwtPayload & ManageTokenType;
-
-      const user = await User.findOne({ where: { email } });
-
-      if (!user) {
-        throw createError(401, "Invalid email or password!");
+      if (code !== codeToken || email !== user.email) {
+        return res.status(403).send({
+          message: "Verification code is invalid!",
+        });
       }
 
       const {
@@ -118,7 +138,10 @@ export const emailVerification = async (req: Request, res: Response) => {
         lastName: user.lastName,
       });
 
-      await User.update({ refreshToken }, { where: { email } });
+      await User.update(
+        { refreshToken, verifiedAccount: true },
+        { where: { email } }
+      );
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,

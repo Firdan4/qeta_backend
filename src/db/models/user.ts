@@ -8,6 +8,7 @@ interface UserAttributes {
   email?: string;
   password?: string;
   refreshToken?: string | null;
+  tokenVerificationEmail?: string | null;
   displayName?: string | null;
   photoURL?: string | null | undefined;
   bio?: string | null;
@@ -36,6 +37,7 @@ class User extends Model<UserAttributes, UserInput> implements UserAttributes {
   public email!: string;
   public password!: string;
   public refreshToken!: string | null;
+  public tokenVerificationEmail!: string | null;
   public displayName!: string | null;
   public photoURL!: string | null | undefined;
   public bio!: string | null;
@@ -81,6 +83,10 @@ User?.init(
       type: DataTypes.STRING,
     },
     refreshToken: {
+      allowNull: true,
+      type: DataTypes.STRING,
+    },
+    tokenVerificationEmail: {
       allowNull: true,
       type: DataTypes.STRING,
     },

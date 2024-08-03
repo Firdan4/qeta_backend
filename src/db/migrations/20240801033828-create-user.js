@@ -25,6 +25,10 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      tokenVerificationEmail: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
       displayName: {
         type: Sequelize.STRING,
         allowNull: true,

@@ -14,6 +14,6 @@ const router = Router();
 
 router.post("/register", validationRegistration, signUp);
 router.post("/login", validationLogin, signIn);
-router.get("/emailVerification", emailVerification);
+router.post("/emailVerification", emailVerification);
 
 export default router;
