@@ -8,6 +8,7 @@ import {
   generateAccessAndRefreshToken,
   hashPasswords,
 } from "../libs/auth";
+import { sendEmail } from "../services/mailer";
 export const getAllUser = async (req: Request, res: Response) => {
   return res.status(200).send({
     message: "API Get ALL User",
@@ -50,31 +51,38 @@ export const signIn = async (req: Request, res: Response) => {
       throw createError(401, "Invalid email or password.");
     }
 
-    const {
-      id,
-      password: userPassword,
-      refreshToken: userRefreshToken,
-      ...data
-    } = user.dataValues;
-
-    const { accessToken, refreshToken } = generateAccessAndRefreshToken({
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+    const result = await sendEmail({
+      to: email,
+      subject: "Testing send email",
+      text: "Ini testing send email",
     });
 
-    await User.update({ refreshToken }, { where: { id } });
+    // const {
+    //   id,
+    //   password: userPassword,
+    //   refreshToken: userRefreshToken,
+    //   ...data
+    // } = user.dataValues;
 
-    // Set cookie untuk refresh token
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    // const { accessToken, refreshToken } = generateAccessAndRefreshToken({
+    //   email: user.email,
+    //   firstName: user.firstName,
+    //   lastName: user.lastName,
+    // });
+
+    // await User.update({ refreshToken }, { where: { id } });
+
+    // // Set cookie untuk refresh token
+    // res.cookie("refreshToken", refreshToken, {
+    //   httpOnly: true,
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
 
     return res.status(200).send({
-      message: "API login",
-      token: accessToken,
-      user: data,
+      message: "Send email verification successfully!",
+      data: result,
+      // token: accessToken,
+      // user: data,
     });
   } catch (error: any) {
     return res.status(error.status || 500).send({
