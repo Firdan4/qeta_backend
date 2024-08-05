@@ -60,6 +60,19 @@ export const signIn = async (
       throw createError(401, "Invalid email or password.");
     }
 
+    if (user.verifiedAccount) {
+      const { data, token } = await generateAccessAndRefreshToken(
+        user.dataValues,
+        res
+      );
+
+      return res.status(200).send({
+        message: "Login successfully!",
+        token,
+        data,
+      });
+    }
+
     next();
   } catch (error: any) {
     return res.status(error.status || 500).send({
@@ -112,32 +125,14 @@ export const emailVerification = async (req: Request, res: Response) => {
         });
       }
 
-      const {
-        id,
-        password: userPassword,
-        refreshToken: userRefreshToken,
-        ...data
-      } = user.dataValues;
-
-      const { accessToken, refreshToken } = generateAccessAndRefreshToken({
-        email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      });
-
-      await User.update(
-        { refreshToken, verifiedAccount: true },
-        { where: { email } }
+      const { data, token } = await generateAccessAndRefreshToken(
+        user.dataValues,
+        res
       );
 
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
-
       return res.status(200).send({
-        message: "Email verified successfully!",
-        token: accessToken,
+        message: "Email verify successfully!",
+        token,
         data,
       });
     });

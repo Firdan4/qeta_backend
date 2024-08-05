@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { Response } from "express";
 import createError from "http-errors";
+import User, { UserAttributes } from "../db/models/user";
 dotenv.config();
 
 export interface ManageTokenType {
@@ -41,11 +42,36 @@ export const refreshTokens = (data: ManageTokenType) => {
   return refreshToken;
 };
 
-export const generateAccessAndRefreshToken = (data: ManageTokenType) => {
+export const generateAccessAndRefreshToken = async (
+  user: UserAttributes,
+  res: Response
+) => {
+  const data = {
+    email: user.firstName!,
+    firstName: user.firstName!,
+    lastName: user.lastName!,
+  };
+
   const refreshToken = refreshTokens(data);
   const accessToken = accessTokens(data);
 
-  return { accessToken, refreshToken };
+  const {
+    id,
+    password: userPassword,
+    refreshToken: userRefreshToken,
+    ...datas
+  } = user;
+
+  await User.update(
+    { refreshToken, verifiedAccount: true },
+    { where: { email: user.email } }
+  );
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+  return { token: accessTokens, data: datas };
 };
 
 export const generateTokenVerificationCode = (email: string, code: string) => {
