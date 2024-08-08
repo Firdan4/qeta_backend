@@ -34,13 +34,13 @@ export const validationLogin = async (
     next();
   } catch (error: any) {
     if (error instanceof ZodError) {
-      return res.status(400).json({
+      return res.status(400).send({
         message: "Validation error",
         errors: error.errors,
       });
     } else {
-      return res.status(500).json({
-        message: "Internal server error",
+      return res.status(error.status || 500).send({
+        message: error.message || "Internal Error!",
       });
     }
   }
