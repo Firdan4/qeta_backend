@@ -14,12 +14,6 @@ import {
 import { sendEmail } from "../services/mailer";
 import jwt from "jsonwebtoken";
 
-export const getAllUser = async (req: Request, res: Response) => {
-  return res.status(200).send({
-    message: "API Get ALL User",
-  });
-};
-
 export const signUp = async (req: Request, res: Response) => {
   const { password, ...prev } = req.body;
 

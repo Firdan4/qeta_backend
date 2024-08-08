@@ -71,7 +71,7 @@ export const generateAccessAndRefreshToken = async (
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
-  return { token: accessTokens, data: datas };
+  return { token: accessToken, data: datas };
 };
 
 export const generateTokenVerificationCode = (email: string, code: string) => {
