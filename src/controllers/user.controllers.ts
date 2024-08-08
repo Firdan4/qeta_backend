@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User from "../db/models/user";
 import createError from "http-errors";
 import { getAllUser, getUserByEmail } from "../services/userServices";
-import validateEmail from "../helper/validationEmail";
+import validateEmail from "../libs/validationEmail";
 
 export const getOne = async (req: Request, res: Response) => {
   const { email } = req.params;
