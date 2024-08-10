@@ -7,6 +7,11 @@ const router = Router();
 
 router.get("/one", verificationAccess, getOne);
 router.get("/all", verificationAccess, getAll);
-router.get("/updateUser", verificationAccess, validationUpdateUser, updateUser);
+router.post(
+  "/updateUser",
+  verificationAccess,
+  validationUpdateUser,
+  updateUser
+);
 
 export default router;
