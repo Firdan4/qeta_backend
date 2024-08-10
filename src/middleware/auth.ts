@@ -1,6 +1,6 @@
 import createError from "http-errors";
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
-import { verificasiAccessToken } from "../libs/auth";
+import { verificationAccessToken } from "../libs/auth";
 import jwt from "jsonwebtoken";
 import { TRequest } from "../types";
 
@@ -13,10 +13,10 @@ export const verificationAccess = async (
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      throw createError(403, "Token is required!");
+      throw createError(403, "Invalid Access Token");
     }
 
-    verificasiAccessToken(token, async (err, decode) => {
+    verificationAccessToken(token, async (err, decode) => {
       if (err) {
         return res.status(403).send({
           message: "Token expired!",

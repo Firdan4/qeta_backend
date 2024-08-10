@@ -69,7 +69,7 @@ export const generateAccessAndRefreshToken = async (
 
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
   });
   return { token: accessToken, data: datas };
 };
@@ -92,7 +92,14 @@ export const verificationEmail = (
   jwt.verify(token, process.env.ACCESS_TOKEN_VERIFICATION_CODE_KEY!, callback);
 };
 
-export const verificasiAccessToken = (
+export const verificationAccessToken = (
+  token: string,
+  callback: jwt.VerifyCallback
+) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_KEY!, callback);
+};
+
+export const verificationRefreshToken = (
   token: string,
   callback: jwt.VerifyCallback
 ) => {
