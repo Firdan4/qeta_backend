@@ -58,3 +58,41 @@ export const getAll = async (req: TRequest, res: Response) => {
     });
   }
 };
+
+export const updateUser = async (req: TRequest, res: Response) => {
+  try {
+    const email = req.email;
+
+    if (!email || !validateEmail(email)) {
+      throw createError(400, "Invalid or missing email parameter!");
+    }
+
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      throw createError(404, "User not found!");
+    }
+
+    await User.update(req.body, {
+      where: {
+        id: user.id,
+      },
+    });
+
+    const {
+      id,
+      password: userPassword,
+      refreshToken: userRefreshToken,
+      ...datas
+    } = user;
+
+    return res.status(200).send({
+      message: "Update data successfully!",
+      data: datas,
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      message: error.message || "Internal Error!",
+    });
+  }
+};
