@@ -21,7 +21,7 @@ export const getAllUser = async (email: string) => {
       },
     },
     attributes: {
-      exclude: ["password", "refreshToken", "id"], // Exclude password jika diinginkan
+      exclude: ["password", "refreshToken", "id", "tokenVerificationEmail"], // Exclude password jika diinginkan
     },
   });
   return user;

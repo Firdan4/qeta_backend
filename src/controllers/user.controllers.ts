@@ -3,9 +3,10 @@ import User from "../db/models/user";
 import createError from "http-errors";
 import { getAllUser, getUserByEmail } from "../services/userServices";
 import validateEmail from "../libs/validationEmail";
+import { TRequest } from "../types";
 
-export const getOne = async (req: Request, res: Response) => {
-  const { email } = req.params;
+export const getOne = async (req: TRequest, res: Response) => {
+  const email = req.email;
 
   if (!email || !validateEmail(email)) {
     throw createError(400, "Invalid or missing email parameter!");
@@ -22,6 +23,7 @@ export const getOne = async (req: Request, res: Response) => {
       id,
       password: _password,
       refreshToken: _refreshToken,
+      tokenVerificationEmail: _tokenVerificationEmail,
       ...userData
     } = user.dataValues;
 
@@ -36,12 +38,12 @@ export const getOne = async (req: Request, res: Response) => {
   }
 };
 
-export const getAll = async (req: Request, res: Response) => {
-  const { email } = req.params;
+export const getAll = async (req: TRequest, res: Response) => {
+  const email = req.email;
 
   try {
     if (!email) {
-      throw createError(404, "Params is required!");
+      throw createError(404, "Email is required!");
     }
 
     const users = await getAllUser(email);

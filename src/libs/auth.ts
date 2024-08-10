@@ -47,7 +47,7 @@ export const generateAccessAndRefreshToken = async (
   res: Response
 ) => {
   const data = {
-    email: user.firstName!,
+    email: user.email!,
     firstName: user.firstName!,
     lastName: user.lastName!,
   };
@@ -90,4 +90,11 @@ export const verificationEmail = (
   callback: jwt.VerifyCallback
 ) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_VERIFICATION_CODE_KEY!, callback);
+};
+
+export const verificasiAccessToken = (
+  token: string,
+  callback: jwt.VerifyCallback
+) => {
+  jwt.verify(token, process.env.ACCESS_TOKEN_KEY!, callback);
 };
