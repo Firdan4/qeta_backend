@@ -10,9 +10,54 @@ import {
   hashPasswords,
   ManageTokenType,
   verificationEmail,
+  verificationRefreshToken,
 } from "../libs/auth";
 import { sendEmail } from "../services/mailer";
 import jwt from "jsonwebtoken";
+
+export const refreshToken = async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies.refreshToken;
+
+    if (!token) {
+      throw createError(401, "Invalid Refresh Token!");
+    }
+
+    const user = await User.findOne({
+      where: {
+        refreshToken: token,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).send({
+        message: "Not Found!",
+      });
+    }
+
+    verificationRefreshToken(token, async (err, decode) => {
+      if (err) {
+        return res.status(401).send({
+          message: "Refresh Token Expired!",
+        });
+      }
+    });
+
+    const { token: accessToken } = await generateAccessAndRefreshToken(
+      user.dataValues,
+      res
+    );
+
+    return res.status(200).send({
+      message: "Verification refresh token successfully!",
+      token: accessToken,
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      message: error.message || "Internal Error!",
+    });
+  }
+};
 
 export const signUp = async (req: Request, res: Response) => {
   const { password, ...prev } = req.body;
