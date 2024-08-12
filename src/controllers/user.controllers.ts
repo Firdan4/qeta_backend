@@ -72,9 +72,15 @@ export const updateUser = async (req: TRequest, res: Response) => {
       throw createError(400, "No fields to update!");
     }
 
-    const [updated] = await User.update(updateFields, {
-      where: { email },
-    });
+    const [updated] = await User.update(
+      {
+        ...updateFields,
+        photoURL: `${req.file?.destination}/${req.file?.filename}`,
+      },
+      {
+        where: { email },
+      }
+    );
 
     if (updated === 0) {
       throw createError(404, "User not found or no changes made!");

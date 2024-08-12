@@ -5,6 +5,7 @@ import compression from "compression";
 import cookieParser from "cookie-parser";
 import router from "./routes";
 import connection from "./config/dbConnection";
+import path from "path";
 dotenv.config();
 
 const app = express();
@@ -19,7 +20,11 @@ app.use(
 
 app.use(compression());
 app.use(cookieParser());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+// Static folder for serving uploaded files
+app.use("/uploads", express.static("uploads"));
 
 app.use("/", router);
 
