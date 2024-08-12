@@ -69,9 +69,6 @@ export const updateUser = async (req: TRequest, res: Response) => {
     }
 
     const updateFields = req.body;
-    if (Object.keys(updateFields).length === 0) {
-      throw createError(400, "No fields to update!");
-    }
 
     const dataUser = await getUserByEmail(email);
 

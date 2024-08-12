@@ -12,7 +12,7 @@ router.post(
   "/updateUser",
   verificationAccess,
   upload.single("profile"),
-  validationUpdateUser,
+  // validationUpdateUser,
   updateUser
 );
 
