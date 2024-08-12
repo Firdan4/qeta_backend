@@ -4,6 +4,7 @@ import createError from "http-errors";
 import { getAllUser, getUserByEmail } from "../services/userServices";
 import validateEmail from "../libs/validationEmail";
 import { TRequest } from "../types";
+import fs from "fs";
 
 export const getOne = async (req: TRequest, res: Response) => {
   const email = req.email;
@@ -72,24 +73,39 @@ export const updateUser = async (req: TRequest, res: Response) => {
       throw createError(400, "No fields to update!");
     }
 
+    const user = await getUserByEmail(email);
+
+    if (!user) {
+      throw createError(404, "User not found!");
+    }
+
+    // this delete other image profile before using new photo profile
+    if (user.photoURL) {
+      fs.access(user.photoURL, fs.constants.F_OK, (err) => {
+        if (!err) {
+          fs.unlink(user.photoURL!, (err) => {
+            if (err) {
+              return res.status(500).send({
+                message: "Error deleting file",
+              });
+            }
+          });
+        }
+      });
+    }
+
     const [updated] = await User.update(
       {
         ...updateFields,
         photoURL: `${req.file?.destination}/${req.file?.filename}`,
       },
       {
-        where: { email },
+        where: { id: user.id },
       }
     );
 
     if (updated === 0) {
       throw createError(404, "User not found or no changes made!");
-    }
-
-    const user = await getUserByEmail(email);
-
-    if (!user) {
-      throw createError(404, "User not found!");
     }
 
     const {
