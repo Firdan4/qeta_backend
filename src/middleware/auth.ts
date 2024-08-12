@@ -13,7 +13,7 @@ export const verificationAccess = async (
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
-      throw createError(403, "Invalid Access Token");
+      throw createError(403, "Invalid Access");
     }
 
     verificationAccessToken(token, async (err, decode) => {

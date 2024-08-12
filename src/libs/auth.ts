@@ -59,6 +59,7 @@ export const generateAccessAndRefreshToken = async (
     id,
     password: userPassword,
     refreshToken: userRefreshToken,
+    tokenVerificationEmail: usertokenVerificationEmail,
     ...datas
   } = user;
 
@@ -71,6 +72,7 @@ export const generateAccessAndRefreshToken = async (
     httpOnly: true,
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
+
   return { token: accessToken, data: datas };
 };
 

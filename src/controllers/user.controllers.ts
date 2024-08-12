@@ -67,24 +67,32 @@ export const updateUser = async (req: TRequest, res: Response) => {
       throw createError(400, "Invalid or missing email parameter!");
     }
 
+    const updateFields = req.body;
+    if (Object.keys(updateFields).length === 0) {
+      throw createError(400, "No fields to update!");
+    }
+
+    const [updated] = await User.update(updateFields, {
+      where: { email },
+    });
+
+    if (updated === 0) {
+      throw createError(404, "User not found or no changes made!");
+    }
+
     const user = await getUserByEmail(email);
 
     if (!user) {
       throw createError(404, "User not found!");
     }
 
-    await User.update(req.body, {
-      where: {
-        id: user.id,
-      },
-    });
-
     const {
       id,
       password: userPassword,
       refreshToken: userRefreshToken,
+      tokenVerificationEmail: usertokenVerificationEmail,
       ...datas
-    } = user;
+    } = user.dataValues;
 
     return res.status(200).send({
       message: "Update data successfully!",
