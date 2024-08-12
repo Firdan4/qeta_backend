@@ -73,17 +73,17 @@ export const updateUser = async (req: TRequest, res: Response) => {
       throw createError(400, "No fields to update!");
     }
 
-    const user = await getUserByEmail(email);
+    const dataUser = await getUserByEmail(email);
 
-    if (!user) {
+    if (!dataUser) {
       throw createError(404, "User not found!");
     }
 
     // this delete other image profile before using new photo profile
-    if (user.photoURL) {
-      fs.access(user.photoURL, fs.constants.F_OK, (err) => {
+    if (dataUser.photoURL) {
+      fs.access(dataUser.photoURL, fs.constants.F_OK, (err) => {
         if (!err) {
-          fs.unlink(user.photoURL!, (err) => {
+          fs.unlink(dataUser.photoURL!, (err) => {
             if (err) {
               return res.status(500).send({
                 message: "Error deleting file",
@@ -100,7 +100,7 @@ export const updateUser = async (req: TRequest, res: Response) => {
         photoURL: `${req.file?.destination}/${req.file?.filename}`,
       },
       {
-        where: { id: user.id },
+        where: { id: dataUser.id },
       }
     );
 
@@ -108,13 +108,15 @@ export const updateUser = async (req: TRequest, res: Response) => {
       throw createError(404, "User not found or no changes made!");
     }
 
+    const newUser = await getUserByEmail(dataUser.email);
+
     const {
       id,
       password: userPassword,
       refreshToken: userRefreshToken,
       tokenVerificationEmail: usertokenVerificationEmail,
       ...datas
-    } = user.dataValues;
+    } = newUser!.dataValues;
 
     return res.status(200).send({
       message: "Update data successfully!",
