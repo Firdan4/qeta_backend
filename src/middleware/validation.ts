@@ -17,7 +17,7 @@ export const validationRegistration = async (
   } catch (error: any) {
     if (error instanceof ZodError) {
       return res.status(400).json({
-        message: "Validation error",
+        message: error.errors[0].message,
         errors: error.errors,
       });
     } else {
@@ -39,7 +39,7 @@ export const validationLogin = async (
   } catch (error: any) {
     if (error instanceof ZodError) {
       return res.status(400).send({
-        message: "Validation error",
+        message: error.errors[0].message,
         errors: error.errors,
       });
     } else {
@@ -61,7 +61,7 @@ export const validationUpdateUser = async (
   } catch (error: any) {
     if (error instanceof ZodError) {
       return res.status(400).json({
-        message: "Validation error",
+        message: error.errors[0].message,
         errors: error.errors,
       });
     } else {
