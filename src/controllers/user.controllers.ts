@@ -76,26 +76,28 @@ export const updateUser = async (req: TRequest, res: Response) => {
       throw createError(404, "User not found!");
     }
 
-    // this delete other image profile before using new photo profile
-    if (dataUser.photoURL) {
-      fs.access(dataUser.photoURL, fs.constants.F_OK, (err) => {
-        if (!err) {
-          fs.unlink(dataUser.photoURL!, (err) => {
-            if (err) {
-              return res.status(500).send({
-                message: "Error deleting file",
-              });
-            }
-          });
-        }
-      });
+    if (req.file) {
+      updateFields.photoURL = `${req.file?.destination}/${req.file?.filename}`;
+
+      // this delete other image profile before using new photo profile
+      if (dataUser.photoURL) {
+        fs.access(dataUser.photoURL, fs.constants.F_OK, (err) => {
+          if (!err) {
+            fs.unlink(dataUser.photoURL!, (err) => {
+              if (err) {
+                return res.status(500).send({
+                  message: "Error deleting file",
+                });
+              }
+            });
+          }
+        });
+      }
     }
 
     const [updated] = await User.update(
-      {
-        ...updateFields,
-        photoURL: `${req.file?.destination}/${req.file?.filename}`,
-      },
+      updateFields,
+
       {
         where: { id: dataUser.id },
       }
