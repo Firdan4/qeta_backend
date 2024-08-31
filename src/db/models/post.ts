@@ -125,3 +125,5 @@ Post.init(
     underscored: false,
   }
 );
+
+export default Post;

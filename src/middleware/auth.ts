@@ -1,5 +1,5 @@
 import createError from "http-errors";
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { verificationAccessToken } from "../libs/auth";
 import jwt from "jsonwebtoken";
 import { TRequest } from "../types";
@@ -23,9 +23,10 @@ export const verificationAccess = async (
         });
       }
 
-      const { email, firstName, lastName } = decode as jwt.JwtPayload;
+      const { email, id, firstName, lastName } = decode as jwt.JwtPayload;
 
       req.email = email;
+      req.id = id;
 
       next();
     });
