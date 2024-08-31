@@ -9,77 +9,62 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.BIGINT,
       },
-      firstName: {
-        type: Sequelize.STRING,
-      },
-      lastName: {
-        type: Sequelize.STRING,
-      },
-      email: {
-        type: Sequelize.STRING,
-      },
-      password: {
-        type: Sequelize.STRING,
-      },
-      refreshToken: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      tokenVerificationEmail: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      displayName: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      photoURL: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      bio: {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
-      followingCount: {
-        type: Sequelize.STRING,
+      idUser: {
         allowNull: false,
+        type: Sequelize.INTEGER,
       },
-      followersCount: {
-        type: Sequelize.STRING,
+      typePost: {
         allowNull: false,
-      },
-      likesCount: {
         type: Sequelize.STRING,
-        allowNull: false,
       },
-      youtube: {
+      idSound: {
+        allowNull: true,
+        type: Sequelize.INTEGER,
+      },
+      source: {
+        allowNull: true,
         type: Sequelize.STRING,
-        allowNull: true,
       },
-      instagram: {
+      thumbnail: {
+        allowNull: true,
         type: Sequelize.STRING,
-        allowNull: true,
       },
-      tiktok: {
+      description: {
+        allowNull: true,
         type: Sequelize.STRING,
-        allowNull: true,
       },
-      facebook: {
+      shared: {
+        allowNull: true,
         type: Sequelize.STRING,
-        allowNull: true,
       },
-      verifiedAccount: {
-        type: Sequelize.BOOLEAN,
-        allowNull: true,
-      },
-      phoneNumber: {
+      tags: {
         type: Sequelize.STRING,
-        allowNull: true,
+        defaultValue: "[]",
+      },
+      mention: {
+        type: Sequelize.STRING,
+        defaultValue: "[]",
+      },
+      isComment: {
+        type: Sequelize.STRING,
+        defaultValue: "anyone",
       },
       isPublic: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.STRING,
+        defaultValue: "anyone",
+      },
+      views: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      additionalLink: {
         allowNull: true,
+        type: Sequelize.STRING,
+      },
+      geolocation: {
+        allowNull: true,
+        type: Sequelize.STRING,
+        defaultValue: "[]",
       },
       createdAt: {
         allowNull: false,
