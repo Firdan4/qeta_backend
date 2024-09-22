@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   "/video",
-  upload.single("postVideo"),
+  upload.array("postVideo"),
   verificationAccess,
   createPostVideo
 );
