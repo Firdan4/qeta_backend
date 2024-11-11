@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import User from "../db/models/user";
+import Post from "../db/models/post";
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {
   const user = await User.findOne({
@@ -9,6 +10,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
     where: {
       email,
     },
+    include: [{ model: Post, as: "posts" }],
   });
   return user;
 };
