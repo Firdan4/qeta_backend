@@ -2,6 +2,7 @@ import { Response } from "express";
 import createError from "http-errors";
 import Post from "../db/models/post";
 import { TRequest } from "../types";
+import { Op, Sequelize } from "sequelize";
 
 export const createPostVideo = async (req: TRequest, res: Response) => {
   const files = req.files as Express.Multer.File[];
@@ -30,6 +31,29 @@ export const createPostVideo = async (req: TRequest, res: Response) => {
 
     return res.status(200).send({
       message: "Created Post Succesfully",
+      post,
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      message: error.message || "Internal Error!",
+    });
+  }
+};
+
+export const getAllPost = async (req: TRequest, res: Response) => {
+  try {
+    const post = await Post.findAll({
+      order: [Sequelize.fn("RAND")],
+      limit: 10,
+      where: {
+        idUser: {
+          [Op.ne]: req.id, // Kondisi: idUser tidak sama dengan 1
+        },
+      },
+    });
+
+    return res.status(200).send({
+      message: "Get Random Post Succesfully",
       post,
     });
   } catch (error: any) {

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createPostVideo } from "../controllers/post.controllers";
+import { createPostVideo, getAllPost } from "../controllers/post.controllers";
 import upload from "../config/multer";
 import { verificationAccess } from "../middleware/auth";
 
@@ -11,5 +11,6 @@ router.post(
   verificationAccess,
   createPostVideo
 );
+router.get("/all-post", verificationAccess, getAllPost);
 
 export default router;

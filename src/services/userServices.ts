@@ -10,7 +10,7 @@ export const getUserByEmail = async (email: string): Promise<User | null> => {
     where: {
       email,
     },
-    include: [{ model: Post, as: "posts" }],
+    include: [{ model: Post, as: "posts", order: [["createdAt", "DESC"]] }],
   });
   return user;
 };
