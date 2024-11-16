@@ -47,9 +47,10 @@ export const getAllPost = async (req: TRequest, res: Response) => {
       limit: 10,
       where: {
         idUser: {
-          [Op.ne]: req.id, // Kondisi: idUser tidak sama dengan 1
+          [Op.ne]: req.id, // Kondisi: idUser tidak sama dengan user saat ini
         },
       },
+      group: ["idUser"],
     });
 
     return res.status(200).send({

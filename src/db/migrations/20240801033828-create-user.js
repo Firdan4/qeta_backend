@@ -7,72 +7,87 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.BIGINT,
+        type: DataTypes.BIGINT,
       },
-      idUser: {
+      firstName: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      lastName: {
+        allowNull: true,
+        type: DataTypes.STRING,
+      },
+      email: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        unique: true,
+        type: DataTypes.STRING,
       },
-      typePost: {
+      password: {
         allowNull: false,
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
       },
-      idSound: {
+      refreshToken: {
         allowNull: true,
-        type: Sequelize.INTEGER,
+        type: DataTypes.STRING,
       },
-      source: {
+      tokenVerificationEmail: {
         allowNull: true,
-        type: Sequelize.STRING,
+        type: DataTypes.STRING,
       },
-      thumbnail: {
+      displayName: {
+        type: DataTypes.STRING,
         allowNull: true,
-        type: Sequelize.STRING,
       },
-      description: {
+      photoURL: {
+        type: DataTypes.STRING,
         allowNull: true,
-        type: Sequelize.STRING,
       },
-      shared: {
+      bio: {
+        type: DataTypes.STRING,
         allowNull: true,
-        type: Sequelize.STRING,
       },
-      tags: {
-        type: Sequelize.STRING,
-        defaultValue: "[]",
+      followingCount: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "0",
       },
-      mention: {
-        type: Sequelize.STRING,
-        defaultValue: "[]",
+      followersCount: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "0",
       },
-      isComment: {
-        type: Sequelize.STRING,
-        defaultValue: "anyone",
+      likesCount: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        defaultValue: "0",
+      },
+      youtube: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      instagram: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      tiktok: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      facebook: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      verifiedAccount: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      phoneNumber: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       isPublic: {
-        type: Sequelize.STRING,
-        defaultValue: "anyone",
-      },
-      views: {
-        type: Sequelize.INTEGER,
-        defaultValue: 0,
-      },
-      additionalLink: {
+        type: DataTypes.BOOLEAN,
         allowNull: true,
-        type: Sequelize.STRING,
-      },
-      geolocation: {
-        allowNull: true,
-        type: Sequelize.STRING,
-        defaultValue: "[]",
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE,
       },
     });
   },
