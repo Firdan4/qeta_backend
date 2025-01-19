@@ -5,6 +5,7 @@ import Follow from "../db/models/follow";
 import User from "../db/models/user";
 import connection from "../config/dbConnection";
 
+// this is follow and unfollow endpoint
 export const getFollow = async (req: TRequest, res: Response) => {
   const { followingId } = req.params;
   const followerId = req.id;
