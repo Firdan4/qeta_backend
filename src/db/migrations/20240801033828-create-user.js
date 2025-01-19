@@ -7,88 +7,96 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.BIGINT,
+        type: Sequelize.BIGINT,
       },
       firstName: {
         allowNull: true,
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       },
       lastName: {
         allowNull: true,
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       },
       email: {
         allowNull: false,
         unique: true,
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       },
       password: {
         allowNull: false,
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       },
       refreshToken: {
         allowNull: true,
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       },
       tokenVerificationEmail: {
         allowNull: true,
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
       },
       displayName: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       photoURL: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       bio: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       followingCount: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: "0",
       },
       followersCount: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: "0",
       },
       likesCount: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: false,
         defaultValue: "0",
       },
       youtube: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       instagram: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       tiktok: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       facebook: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       verifiedAccount: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         allowNull: true,
       },
       phoneNumber: {
-        type: DataTypes.STRING,
+        type: Sequelize.STRING,
         allowNull: true,
       },
       isPublic: {
-        type: DataTypes.BOOLEAN,
+        type: Sequelize.BOOLEAN,
         allowNull: true,
       },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE
+      }
     });
   },
   async down(queryInterface, Sequelize) {

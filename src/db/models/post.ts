@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import connection from "../../config/dbConnection";
+import Like from "./like";
 
 export interface PostAttributes {
   id?: number;
@@ -9,12 +10,14 @@ export interface PostAttributes {
   source?: string;
   thumbnail?: string;
   description?: string;
-  shared?: string;
   tags?: string;
   mention?: string;
   isComment?: string;
   isPublic?: string;
   views?: string;
+  likes?: string;
+  comments?: string;
+  shared?: string;
   additionalLink?: string;
   geolocation?: string;
 
@@ -32,12 +35,14 @@ class Post extends Model<PostAttributes, PostInput> implements PostAttributes {
   public source!: string;
   public thumbnail!: string;
   public description!: string;
-  public shared!: string;
   public tags!: string;
   public mention!: string;
   public isComment!: string;
   public isPublic!: string;
   public views!: string;
+  public likes!: string;
+  public comments!: string;
+  public shared!: string;
   public additionalLink!: string;
   public geolocation!: string;
 
@@ -77,10 +82,6 @@ Post.init(
       allowNull: true,
       type: DataTypes.STRING,
     },
-    shared: {
-      allowNull: true,
-      type: DataTypes.STRING,
-    },
     tags: {
       type: DataTypes.STRING,
       defaultValue: "[]",
@@ -98,6 +99,18 @@ Post.init(
       defaultValue: "anyone",
     },
     views: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    likes: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    comments: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+    },
+    shared: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
@@ -125,5 +138,10 @@ Post.init(
     underscored: false,
   }
 );
+
+Post.hasMany(Like, {
+  foreignKey: "postId",
+  as: "like",
+});
 
 export default Post;

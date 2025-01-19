@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
       if (file.fieldname === "profile") {
         folder += "images/profiles";
       } else {
-        folder += "images";
+        folder += "images/thumbnails";
       }
     }
 
@@ -53,7 +53,7 @@ const fileFilter = async (
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 100 * 1024 * 1024 }, // Max file size 100MB
+  limits: { fileSize: 300 * 1024 * 1024 }, // Max file size 100MB
 });
 
 export default upload;

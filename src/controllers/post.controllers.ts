@@ -2,7 +2,7 @@ import { Response } from "express";
 import createError from "http-errors";
 import Post from "../db/models/post";
 import { TRequest } from "../types";
-import { Op, Sequelize } from "sequelize";
+import { getPostwithLike, getRandomPost } from "../services/postServices";
 
 export const createPostVideo = async (req: TRequest, res: Response) => {
   const files = req.files as Express.Multer.File[];
@@ -42,20 +42,47 @@ export const createPostVideo = async (req: TRequest, res: Response) => {
 
 export const getAllPost = async (req: TRequest, res: Response) => {
   try {
-    const post = await Post.findAll({
-      order: [Sequelize.fn("RAND")],
-      limit: 10,
-      where: {
-        idUser: {
-          [Op.ne]: req.id, // Kondisi: idUser tidak sama dengan user saat ini
-        },
-      },
-      group: ["idUser"],
-    });
+    const data = await getRandomPost(req.id);
 
     return res.status(200).send({
       message: "Get Random Post Succesfully",
-      post,
+      data,
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      message: error.message || "Internal Error!",
+    });
+  }
+};
+
+export const getPostByLike = async (req: TRequest, res: Response) => {
+  try {
+    const data = await getPostwithLike(req.id);
+
+    return res.status(200).send({
+      message: "Get Random Post Succesfully",
+      data,
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      message: error.message || "Internal Error!",
+    });
+  }
+};
+
+export const getPostById = async (req: TRequest, res: Response) => {
+  try {
+    const data = await Post.findAll({
+      order: [["createdAt", "DESC"]],
+      // limit: 10,
+      where: {
+        idUser: req.id,
+      },
+    });
+
+    return res.status(200).send({
+      message: "Get My Post Succesfully",
+      data,
     });
   } catch (error: any) {
     return res.status(error.status || 500).send({

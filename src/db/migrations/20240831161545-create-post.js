@@ -27,9 +27,6 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
-      shared: {
-        type: Sequelize.STRING
-      },
       tags: {
         type: Sequelize.STRING
       },
@@ -43,6 +40,15 @@ module.exports = {
         type: Sequelize.STRING
       },
       views: {
+        type: Sequelize.STRING
+      },
+      likes: {
+        type: Sequelize.STRING
+      },
+      comments: {
+        type: Sequelize.STRING
+      },
+      shared: {
         type: Sequelize.STRING
       },
       additionalLink: {

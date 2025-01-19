@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import connection from "../../config/dbConnection";
 import Post from "./post";
+import Follow from "./follow";
 
 export interface UserAttributes {
   id?: number;
@@ -157,6 +158,11 @@ User?.init(
 User.hasMany(Post, {
   foreignKey: "idUser",
   as: "posts",
+});
+
+User.hasMany(Follow, {
+  foreignKey: "followingId",
+  as: "follows",
 });
 
 export default User;
