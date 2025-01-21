@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import User from "../db/models/user";
 import createError from "http-errors";
-import { getAllUser, getUserByEmail } from "../services/userServices";
+import {
+  getAllUser,
+  getUserByEmail,
+  getUserById,
+} from "../services/userServices";
 import validateEmail from "../libs/validationEmail";
 import { TRequest } from "../types";
 import fs from "fs";
@@ -55,6 +59,28 @@ export const getAll = async (req: TRequest, res: Response) => {
     });
   } catch (error: any) {
     return res.status(error.status || 500).send({
+      message: error.message || "Internal Error!",
+    });
+  }
+};
+export const getDisplayName = async (req: TRequest, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    if (!id) {
+      throw createError(404, "Id is required!");
+    }
+
+    const user = await getUserById(id);
+
+    return res.status(200).send({
+      status: "success",
+      message: "Get user successfully!",
+      data: user,
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      status: "failed",
       message: error.message || "Internal Error!",
     });
   }

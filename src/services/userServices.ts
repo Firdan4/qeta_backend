@@ -28,3 +28,10 @@ export const getAllUser = async (email: string) => {
   });
   return user;
 };
+
+export const getUserById = async (id: number | string) => {
+  const user = await User.findByPk(id, {
+    attributes: ["firstName", "lastName", "displayName", "verifiedAccount"],
+  });
+  return user;
+};

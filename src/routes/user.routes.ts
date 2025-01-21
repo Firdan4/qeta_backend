@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { getOne, getAll, updateUser } from "../controllers/user.controllers";
+import {
+  getOne,
+  getAll,
+  updateUser,
+  getDisplayName,
+} from "../controllers/user.controllers";
 import { verificationAccess } from "../middleware/auth";
 import { validationUpdateUser } from "../middleware/validation";
 import upload from "../config/multer";
@@ -15,5 +20,6 @@ router.post(
   // validationUpdateUser,
   updateUser
 );
+router.get("/:id", verificationAccess, getDisplayName);
 
 export default router;
