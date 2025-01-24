@@ -1,13 +1,15 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import connection from "../../config/dbConnection";
 import User, { UserAttributes } from "./user";
-import Reply from "./reply";
+import CommentLike from "./comment-likes";
 
 export type CommentAttributes = {
-  id: number;
-  postId: number;
-  userId: number;
+  id: string;
+  postId: string;
+  userId: string;
+  parentId: string | null;
   content: string;
+  likeCount: number;
   tags?: string;
   pinned: boolean;
   createdAt: Date;
@@ -23,12 +25,14 @@ export interface CommentInput
 
 class Comment
   extends Model<CommentAttributes, CommentInput>
-  implements UserAttributes
+  implements CommentAttributes
 {
-  public id!: number;
-  public postId!: number;
-  public userId!: number;
+  public id!: string;
+  public postId!: string;
+  public userId!: string;
+  public parentId!: string | null;
   public content!: string;
+  public likeCount!: number;
   public tags?: string;
   public pinned!: boolean;
 
@@ -41,21 +45,30 @@ Comment.init(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
     },
     postId: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
     },
     userId: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
+    },
+    parentId: {
+      defaultValue: null,
+      allowNull: true,
+      type: DataTypes.UUID,
     },
     content: {
       allowNull: false,
       type: DataTypes.TEXT,
+    },
+    likeCount: {
+      defaultValue: 0,
+      type: DataTypes.INTEGER,
     },
     tags: {
       allowNull: true,
@@ -86,16 +99,16 @@ Comment.init(
   }
 );
 
-Comment.hasMany(Reply, {
+Comment.hasMany(CommentLike, {
   foreignKey: "commentId",
-  as: "replies",
-  onDelete: "CASCADE", // Jika comment dihapus, reply terkait juga dihapus
+  as: "comment-like",
 });
+
 User.hasMany(Comment, {
   foreignKey: "userId",
   as: "comments",
   onDelete: "CASCADE",
 });
-Comment.belongsTo(User, { foreignKey: "userId", as: "users" });
+Comment.belongsTo(User, { foreignKey: "userId", as: "user" });
 
 export default Comment;

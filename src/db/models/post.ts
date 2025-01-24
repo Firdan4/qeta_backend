@@ -1,9 +1,10 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional, UUIDV4 } from "sequelize";
 import connection from "../../config/dbConnection";
 import Like from "./like";
+import User from "./user";
 
 export interface PostAttributes {
-  id?: number;
+  id?: string | number;
   idUser?: number;
   typePost?: string;
   idSound?: number;
@@ -28,7 +29,7 @@ export interface PostAttributes {
 export interface PostInput extends Optional<PostAttributes, "id"> {}
 
 class Post extends Model<PostAttributes, PostInput> implements PostAttributes {
-  public id!: number;
+  public id!: string | number;
   public idUser!: number;
   public typePost!: string;
   public idSound!: number;
@@ -54,13 +55,13 @@ Post.init(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.BIGINT,
+      defaultValue: UUIDV4,
+      type: DataTypes.UUID,
     },
     idUser: {
       allowNull: false,
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
     },
     typePost: {
       allowNull: false,

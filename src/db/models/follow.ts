@@ -4,8 +4,8 @@ import { UserAttributes } from "./user";
 
 export type FollowAttributes = {
   id: number; // Primary Key
-  followerId: number; // Foreign Key to User
-  followingId: number; // Foreign Key to User
+  followerId: string; // Foreign Key to User
+  followingId: string; // Foreign Key to User
   createdAt: Date; // Like creation timestamp
   updatedAt: Date; // Like creation timestamp
   deletedAt: Date; // Like creation timestamp
@@ -19,11 +19,11 @@ export interface FollowInput
 
 class Follow
   extends Model<FollowAttributes, FollowInput>
-  implements UserAttributes
+  implements FollowAttributes
 {
   public id!: number;
-  public followerId!: number;
-  public followingId!: number;
+  public followerId!: string;
+  public followingId!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -39,10 +39,10 @@ Follow.init(
       type: DataTypes.INTEGER,
     },
     followerId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
     },
     followingId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
     },
     createdAt: {
       allowNull: false,

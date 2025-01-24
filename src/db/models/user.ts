@@ -1,10 +1,10 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional, UUIDV4 } from "sequelize";
 import connection from "../../config/dbConnection";
 import Post from "./post";
 import Follow from "./follow";
 
 export interface UserAttributes {
-  id?: number;
+  id?: string;
   firstName?: string;
   lastName?: string;
   email?: string;
@@ -33,7 +33,7 @@ export interface UserAttributes {
 export interface UserInput extends Optional<UserAttributes, "id"> {}
 
 class User extends Model<UserAttributes, UserInput> implements UserAttributes {
-  public id!: number;
+  public id!: string;
   public firstName!: string;
   public lastName!: string;
   public email!: string;
@@ -63,9 +63,9 @@ User?.init(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.BIGINT,
+      defaultValue: UUIDV4,
+      type: DataTypes.UUID,
     },
     firstName: {
       allowNull: true,
@@ -163,6 +163,11 @@ User.hasMany(Post, {
 User.hasMany(Follow, {
   foreignKey: "followingId",
   as: "follows",
+});
+
+Post.belongsTo(User, {
+  foreignKey: "idUser",
+  as: "user",
 });
 
 export default User;

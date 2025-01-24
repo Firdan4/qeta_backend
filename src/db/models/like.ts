@@ -1,11 +1,11 @@
-import { DataTypes, Model, Optional } from "sequelize";
+import { DataTypes, Model, Optional, UUIDV4 } from "sequelize";
 import { PostAttributes } from "./post";
 import connection from "../../config/dbConnection";
 
 export type LikeAttributes = {
   id: number; // Primary Key
-  userId: number; // Foreign Key to User
-  postId: number; // Foreign Key to Post
+  userId: string; // Foreign Key to User
+  postId: string; // Foreign Key to Post
   createdAt: Date; // Like creation timestamp
   updatedAt: Date; // Like creation timestamp
   deletedAt: Date; // Like creation timestamp
@@ -17,10 +17,10 @@ export interface LikeInput
     "id" | "createdAt" | "updatedAt" | "deletedAt"
   > {}
 
-class Like extends Model<LikeAttributes, LikeInput> implements PostAttributes {
+class Like extends Model<LikeAttributes, LikeInput> implements LikeAttributes {
   public id!: number;
-  public userId!: number;
-  public postId!: number;
+  public userId!: string;
+  public postId!: string;
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -31,15 +31,15 @@ Like.init(
   {
     id: {
       allowNull: false,
-      autoIncrement: true,
       primaryKey: true,
-      type: DataTypes.INTEGER,
+      defaultValue: UUIDV4,
+      type: DataTypes.UUID,
     },
     userId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
     },
     postId: {
-      type: DataTypes.BIGINT,
+      type: DataTypes.UUID,
     },
     createdAt: {
       allowNull: false,
