@@ -2,10 +2,9 @@ import { Response } from "express";
 import { TRequest } from "../types";
 import User from "../db/models/user";
 import createError from "http-errors";
-import Post from "../db/models/post";
-import CommentLike from "../db/models/comment-likes";
 import Comment from "../db/models/comment";
 import { commentLikeById } from "../services/commentServices";
+import Like from "../db/models/like";
 
 export const getCommentLikeById = async (req: TRequest, res: Response) => {
   const { commentId } = req.params;
@@ -35,7 +34,7 @@ export const getCommentLikeById = async (req: TRequest, res: Response) => {
 export const addCommentLike = async (req: TRequest, res: Response) => {
   try {
     const { commentId } = req.body;
-    const userId = req.id as number;
+    const userId = req.id;
 
     if (!commentId || !userId) {
       throw createError(400, "Missing required fields");
@@ -58,8 +57,8 @@ export const addCommentLike = async (req: TRequest, res: Response) => {
       throw createError(400, "Post not found");
     }
 
-    const [data, created] = await CommentLike.findOrCreate({
-      where: { commentId, userId },
+    const [data, created] = await Like.findOrCreate({
+      where: { commentId, userId, likeType: "comment" },
       paranoid: false, // Sertakan data yang dihapus untuk diperiksa
     });
 
@@ -88,8 +87,8 @@ export const removeCommentLike = async (req: TRequest, res: Response) => {
       throw createError(400, "Missing required fields");
     }
 
-    await CommentLike.destroy({
-      where: { commentId, userId },
+    await Like.destroy({
+      where: { commentId, userId, likeType: "comment" },
     });
 
     return res.status(200).send({

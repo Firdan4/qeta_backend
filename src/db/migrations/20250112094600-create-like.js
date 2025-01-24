@@ -15,6 +15,14 @@ module.exports = {
       postId: {
         type: Sequelize.UUID
       },
+      commentId: {
+        type: Sequelize.UUID
+      },
+      likeType: {
+        allowNull: false,
+        defaultValue: 'post',
+        type: Sequelize.ENUM('post', 'comment')
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

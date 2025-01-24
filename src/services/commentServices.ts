@@ -44,8 +44,8 @@ export const getCommentCount = async (
 export const commentLikeById = async (
   commentId?: string
 ): Promise<CommentLike[]> => {
-  const data = await CommentLike.findAll({
-    where: { commentId },
+  const data = await Like.findAll({
+    where: { commentId, likeType: "comment" },
   });
 
   return data ?? [];

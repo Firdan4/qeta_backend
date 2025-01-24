@@ -6,6 +6,8 @@ export type LikeAttributes = {
   id: number; // Primary Key
   userId: string; // Foreign Key to User
   postId: string; // Foreign Key to Post
+  commentId: string; // Foreign Key to Post
+  likeType: "post" | "comment"; // Foreign Key to Post
   createdAt: Date; // Like creation timestamp
   updatedAt: Date; // Like creation timestamp
   deletedAt: Date; // Like creation timestamp
@@ -21,6 +23,8 @@ class Like extends Model<LikeAttributes, LikeInput> implements LikeAttributes {
   public id!: number;
   public userId!: string;
   public postId!: string;
+  public commentId!: string;
+  public likeType!: "post" | "comment";
 
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
@@ -40,6 +44,14 @@ Like.init(
     },
     postId: {
       type: DataTypes.UUID,
+    },
+    commentId: {
+      type: DataTypes.UUID,
+    },
+    likeType: {
+      allowNull: false,
+      defaultValue: "post",
+      type: DataTypes.ENUM("post", "comment"),
     },
     createdAt: {
       allowNull: false,

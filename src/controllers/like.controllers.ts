@@ -11,7 +11,7 @@ export const getLikeById = async (req: TRequest, res: Response) => {
 
   try {
     const likes = await Like.findAll({
-      where: { postId },
+      where: { postId, likeType: "post" },
     });
 
     const isLike = likes.some((item) => item.userId === userId);
@@ -35,7 +35,7 @@ export const getLikeById = async (req: TRequest, res: Response) => {
 export const addLike = async (req: TRequest, res: Response) => {
   try {
     const { postId } = req.body;
-    const userId = req.id as number;
+    const userId = req.id;
 
     if (!postId || !userId) {
       throw createError(400, "Missing required fields");
@@ -59,7 +59,7 @@ export const addLike = async (req: TRequest, res: Response) => {
     }
 
     const [data, created] = await Like.findOrCreate({
-      where: { postId, userId },
+      where: { postId, userId, likeType: "post" },
       paranoid: false, // Sertakan data yang dihapus untuk diperiksa
     });
 
@@ -94,7 +94,7 @@ export const removeLike = async (req: TRequest, res: Response) => {
     }
 
     await Like.destroy({
-      where: { postId, userId },
+      where: { postId, userId, likeType: "post" },
     });
 
     return res.status(200).send({

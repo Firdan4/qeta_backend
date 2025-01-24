@@ -1,7 +1,7 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import connection from "../../config/dbConnection";
-import User, { UserAttributes } from "./user";
-import CommentLike from "./comment-likes";
+import User from "./user";
+import Like from "./like";
 
 export type CommentAttributes = {
   id: string;
@@ -99,9 +99,9 @@ Comment.init(
   }
 );
 
-Comment.hasMany(CommentLike, {
+Comment.hasMany(Like, {
   foreignKey: "commentId",
-  as: "comment-like",
+  as: "like",
 });
 
 User.hasMany(Comment, {
