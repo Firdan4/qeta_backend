@@ -1,4 +1,7 @@
 'use strict';
+
+const { UUIDV4 } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -9,7 +12,7 @@ module.exports = {
         type: Sequelize.UUID
       },
       idUser: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID
       },
       typePost: {
         type: Sequelize.STRING
