@@ -8,7 +8,7 @@ import {
 
 const router = Router();
 
-router.get("/:commentId", verificationAccess, getReplies);
+router.get("/:parentId", verificationAccess, getReplies);
 router.post("/", verificationAccess, addReply);
 router.delete("/:id", verificationAccess, removeReply);
 

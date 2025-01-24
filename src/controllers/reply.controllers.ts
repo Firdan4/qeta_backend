@@ -1,34 +1,33 @@
 import createError from "http-errors";
 import { Response } from "express";
 import { TRequest } from "../types";
-import Reply from "../db/models/reply";
 import User from "../db/models/user";
 import Comment from "../db/models/comment";
 
 export const getReplies = async (req: TRequest, res: Response) => {
-  const { commentId } = req.params;
+  const { parentId } = req.params;
 
   try {
-    const replies = await Reply.findAll({
-      where: { commentId },
+    const replies = await Comment.findAndCountAll({
+      where: { parentId },
       limit: 5,
       include: [
         {
           model: User,
-          as: "users",
-          attributes: ["id", "displayName", "verifiedAccount"],
+          as: "user",
+          attributes: ["id", "displayName", "photoURL", "verifiedAccount"],
         },
       ],
     });
 
     const data = {
-      replies,
-      replyCount: replies.length,
+      replies: replies.rows,
+      replyCount: replies.count,
     };
 
     return res.status(200).send({
       status: "success",
-      message: "Get Follow Succesfully",
+      message: "Get Replies Succesfully",
       data,
     });
   } catch (error: any) {
@@ -41,16 +40,16 @@ export const getReplies = async (req: TRequest, res: Response) => {
 export const addReply = async (req: TRequest, res: Response) => {
   try {
     const data = req.body;
-    const { commentId } = data;
+    const { parentId } = data;
     const userId = req.id;
 
-    if (!commentId || !userId) {
+    if (!parentId || !userId) {
       throw createError(400, "Missing required fields");
     }
 
     const [user, comment] = await Promise.all([
       User.findByPk(userId),
-      Comment.findByPk(commentId),
+      Comment.findByPk(parentId),
     ]);
 
     if (!user) {
@@ -63,13 +62,14 @@ export const addReply = async (req: TRequest, res: Response) => {
 
     const replyFields = {
       ...data,
+      parentId,
       userId,
       pinned: false,
     };
 
-    console.log(replyFields);
+    // console.log(replyFields);
 
-    const reply = await Reply.create(replyFields);
+    const reply = await Comment.create(replyFields);
 
     return res.status(200).send({
       status: "success",
@@ -97,7 +97,7 @@ export const removeReply = async (req: TRequest, res: Response) => {
       throw createError(400, "Invalid data type");
     }
 
-    await Reply.destroy({
+    await Comment.destroy({
       where: { id },
       force: true, // hapus jika menerapkan soft deleted
     });
