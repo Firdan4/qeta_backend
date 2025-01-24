@@ -4,25 +4,21 @@ import { TRequest } from "../types";
 import Comment from "../db/models/comment";
 import User from "../db/models/user";
 import Post from "../db/models/post";
+import CommentLike from "../db/models/comment-likes";
+import { getComment, getCommentCount } from "../services/commentServices";
 
 export const getComments = async (req: TRequest, res: Response) => {
-  const { postId } = req.params;
+  const postId = Number(req.params.postId);
 
   try {
-    const comments = await Comment.findAll({
-      where: { postId },
-      include: [
-        {
-          model: User,
-          as: "users",
-          attributes: ["id", "displayName", "verifiedAccount"],
-        },
-      ],
-    });
+    const [comments, count] = await Promise.all([
+      getComment(postId),
+      getCommentCount(postId),
+    ]);
 
     const data = {
-      comments,
-      commentCount: comments.length,
+      comments: comments,
+      commentCount: count,
     };
 
     return res.status(200).send({
@@ -84,15 +80,11 @@ export const addComment = async (req: TRequest, res: Response) => {
 
 export const removeComment = async (req: TRequest, res: Response) => {
   try {
-    const id = Number(req.params.id);
+    const { id } = req.params;
     const userId = req.id;
 
     if (!id || !userId) {
       throw createError(400, "Missing required fields");
-    }
-
-    if (typeof id !== "number") {
-      throw createError(400, "Invalid data type");
     }
 
     await Comment.destroy({
