@@ -2,20 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Follows', {
+    await queryInterface.createTable('comment-likes', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      followerId: {
-        type: Sequelize.UUID,
-        allowNull: false,
+      userId: {
+        type: Sequelize.UUID
       },
-      followingId: {
-        type: Sequelize.UUID,
-        allowNull: false,
+      commentId: {
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +30,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Follows');
+    await queryInterface.dropTable('comment-likes');
   }
 };

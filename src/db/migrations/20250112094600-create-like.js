@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.BIGINT
+        type: Sequelize.UUID
       },
       postId: {
-        type: Sequelize.BIGINT
+        type: Sequelize.UUID
       },
       createdAt: {
         allowNull: false,
