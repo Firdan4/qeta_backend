@@ -36,7 +36,7 @@ export const getFollow = async (req: TRequest, res: Response) => {
 export const follow = async (req: TRequest, res: Response) => {
   try {
     const { followingId } = req.body;
-    const followerId = req.id as number;
+    const followerId = req.id;
 
     if (!followingId || !followerId) {
       throw createError(400, "Missing required fields");

@@ -4,7 +4,7 @@ import Like from "../db/models/like";
 import User from "../db/models/user";
 
 export const getRandomPost = async (
-  userId?: number
+  userId?: string
 ): Promise<Post[] | null> => {
   const post = await Post.findAll({
     order: [Sequelize.fn("RAND")],
@@ -35,7 +35,7 @@ export const getRandomPost = async (
 };
 
 export const getPostwithLike = async (
-  userId?: number
+  userId?: string
 ): Promise<Post[] | null> => {
   const post = await Post.findAll({
     order: [Sequelize.fn("RAND")],
