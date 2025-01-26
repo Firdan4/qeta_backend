@@ -4,11 +4,10 @@ import { TRequest } from "../types";
 import Comment from "../db/models/comment";
 import User from "../db/models/user";
 import Post from "../db/models/post";
-import CommentLike from "../db/models/comment-likes";
 import { getComment, getCommentCount } from "../services/commentServices";
 
 export const getComments = async (req: TRequest, res: Response) => {
-  const postId = Number(req.params.postId);
+  const postId = req.params.postId;
 
   try {
     const [comments, count] = await Promise.all([
