@@ -3,7 +3,6 @@ import Post from "../db/models/post";
 import Like from "../db/models/like";
 import User from "../db/models/user";
 import Comment from "../db/models/comment";
-import CommentLike from "../db/models/comment-likes";
 
 // export type CommentType = {
 //   count?: number;
@@ -11,13 +10,13 @@ import CommentLike from "../db/models/comment-likes";
 // };
 
 export const getComment = async (
-  postId?: number
+  postId?: string
 ): Promise<Comment[] | null> => {
   const data = await Comment.findAll({
     order: [["createdAt", "DESC"]],
     where: { postId, parentId: null },
     include: [
-      { model: CommentLike, as: "comment-like" },
+      { model: Like, as: "like" },
       {
         model: User,
         as: "user",
@@ -30,7 +29,7 @@ export const getComment = async (
 };
 
 export const getCommentCount = async (
-  postId?: number
+  postId?: string
 ): Promise<number | null> => {
   const data = await Comment.count({
     where: {
@@ -41,9 +40,7 @@ export const getCommentCount = async (
   return data;
 };
 
-export const commentLikeById = async (
-  commentId?: string
-): Promise<CommentLike[]> => {
+export const commentLikeById = async (commentId?: string): Promise<Like[]> => {
   const data = await Like.findAll({
     where: { commentId, likeType: "comment" },
   });
