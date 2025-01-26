@@ -41,10 +41,6 @@ export const addLike = async (req: TRequest, res: Response) => {
       throw createError(400, "Missing required fields");
     }
 
-    if (typeof postId !== "number") {
-      throw createError(400, "Invalid data type");
-    }
-
     const [user, post] = await Promise.all([
       User.findByPk(userId),
       Post.findByPk(postId),
@@ -82,15 +78,11 @@ export const addLike = async (req: TRequest, res: Response) => {
 
 export const removeLike = async (req: TRequest, res: Response) => {
   try {
-    const postId = Number(req.params.postId);
+    const { postId } = req.params;
     const userId = req.id;
 
     if (!req.id || !postId) {
       throw createError(400, "Missing required fields");
-    }
-
-    if (typeof postId !== "number") {
-      throw createError(400, "Invalid data type");
     }
 
     await Like.destroy({
