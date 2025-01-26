@@ -70,9 +70,11 @@ export const signUp = async (req: Request, res: Response) => {
 
     const hashPassword = await hashPasswords(password);
 
+    const displayName = `${prev.firstName}_${prev.lastName}`;
+
     await User.create({
       ...prev,
-      displayName: `${prev.firstName}_${prev.lastName}`,
+      displayName: displayName.toLowerCase(),
       password: hashPassword,
     });
 
