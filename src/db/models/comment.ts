@@ -51,11 +51,11 @@ Comment.init(
     },
     postId: {
       allowNull: false,
-      type: DataTypes.UUID,
+      type: DataTypes.CHAR(14),
     },
     userId: {
       allowNull: false,
-      type: DataTypes.UUID,
+      type: DataTypes.CHAR(14),
     },
     parentId: {
       defaultValue: null,

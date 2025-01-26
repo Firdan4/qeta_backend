@@ -36,14 +36,13 @@ Like.init(
     id: {
       allowNull: false,
       primaryKey: true,
-      defaultValue: UUIDV4,
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
     },
     userId: {
-      type: DataTypes.UUID,
+      type: DataTypes.CHAR(14),
     },
     postId: {
-      type: DataTypes.UUID,
+      type: DataTypes.CHAR(14),
     },
     commentId: {
       type: DataTypes.UUID,

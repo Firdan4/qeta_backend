@@ -10,11 +10,11 @@ module.exports = {
       },
       postId: {
         allowNull: false,
-        type: Sequelize.UUID
+        type: Sequelize.CHAR(14)
       },
       userId: {
         allowNull: false,
-        type: Sequelize.UUID
+        type: Sequelize.CHAR(14)
       },
       parentId:{
         defaultValue:null,

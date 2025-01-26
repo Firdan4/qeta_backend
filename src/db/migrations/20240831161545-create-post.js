@@ -9,10 +9,10 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.UUID
+        type: Sequelize.CHAR(14)
       },
       idUser: {
-        type: Sequelize.UUID
+        type: Sequelize.CHAR(14)
       },
       typePost: {
         type: Sequelize.STRING

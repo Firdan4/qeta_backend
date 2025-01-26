@@ -39,10 +39,10 @@ Follow.init(
       type: DataTypes.INTEGER,
     },
     followerId: {
-      type: DataTypes.UUID,
+      type: DataTypes.CHAR(14),
     },
     followingId: {
-      type: DataTypes.UUID,
+      type: DataTypes.CHAR(14),
     },
     createdAt: {
       allowNull: false,

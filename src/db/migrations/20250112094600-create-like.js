@@ -10,10 +10,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.UUID
+        type: Sequelize.CHAR(14)
       },
       postId: {
-        type: Sequelize.UUID
+        type: Sequelize.CHAR(14)
       },
       commentId: {
         type: Sequelize.UUID

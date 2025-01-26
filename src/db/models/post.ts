@@ -1,7 +1,7 @@
-import { DataTypes, Model, Optional, UUIDV4 } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import connection from "../../config/dbConnection";
 import Like from "./like";
-import User from "./user";
+import shortid from "shortid";
 
 export interface PostAttributes {
   id?: string | number;
@@ -56,12 +56,12 @@ Post.init(
     id: {
       allowNull: false,
       primaryKey: true,
-      defaultValue: UUIDV4,
-      type: DataTypes.UUID,
+      defaultValue: shortid.generate(),
+      type: DataTypes.CHAR(14),
     },
     idUser: {
       allowNull: false,
-      type: DataTypes.UUID,
+      type: DataTypes.CHAR(14),
     },
     typePost: {
       allowNull: false,
