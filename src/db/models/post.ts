@@ -56,7 +56,7 @@ Post.init(
     id: {
       allowNull: false,
       primaryKey: true,
-      defaultValue: shortid.generate(),
+      defaultValue: shortid.generate,
       type: DataTypes.CHAR(14),
     },
     idUser: {

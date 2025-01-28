@@ -36,6 +36,7 @@ Like.init(
     id: {
       allowNull: false,
       primaryKey: true,
+      autoIncrement: true,
       type: DataTypes.INTEGER,
     },
     userId: {
