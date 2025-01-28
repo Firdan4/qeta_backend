@@ -6,11 +6,18 @@ import Comment from "../db/models/comment";
 
 export const getReplies = async (req: TRequest, res: Response) => {
   const { parentId } = req.params;
+  const { _limit, _page } = req.query;
+
+  const limit = Number(_limit as string);
+  const page = Number(_page as string);
+  const offset = (page - 1) * limit;
 
   try {
     const replies = await Comment.findAndCountAll({
+      order: [["createdAt", "DESC"]],
       where: { parentId },
-      limit: 5,
+      limit,
+      offset,
       include: [
         {
           model: User,
@@ -20,9 +27,13 @@ export const getReplies = async (req: TRequest, res: Response) => {
       ],
     });
 
+    const totalPages = Math.ceil(replies.count / limit);
+
     const data = {
       replies: replies.rows,
       replyCount: replies.count,
+      totalPages,
+      currentPage: page,
     };
 
     return res.status(200).send({
@@ -69,12 +80,14 @@ export const addReply = async (req: TRequest, res: Response) => {
 
     // console.log(replyFields);
 
-    const reply = await Comment.create(replyFields);
+    await Comment.create(replyFields);
 
     return res.status(200).send({
       status: "success",
       message: "Reply comment added!",
-      data: reply,
+      data: {
+        parentId,
+      },
     });
   } catch (error: any) {
     return res.status(error.status || 500).send({

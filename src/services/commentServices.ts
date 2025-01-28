@@ -10,11 +10,15 @@ import Comment from "../db/models/comment";
 // };
 
 export const getComment = async (
-  postId?: string
+  postId?: string,
+  limit?: number,
+  offset?: number
 ): Promise<Comment[] | null> => {
   const data = await Comment.findAll({
     order: [["createdAt", "DESC"]],
     where: { postId, parentId: null },
+    limit,
+    offset,
     include: [
       { model: Like, as: "like" },
       {
@@ -28,12 +32,19 @@ export const getComment = async (
   return data;
 };
 
-export const getCommentCount = async (
-  postId?: string
-): Promise<number | null> => {
+export const getCommentCount = async (postId?: string): Promise<number> => {
   const data = await Comment.count({
     where: {
       postId,
+    },
+  });
+
+  return data;
+};
+export const getReplyCount = async (parentId?: string): Promise<number> => {
+  const data = await Comment.count({
+    where: {
+      parentId,
     },
   });
 

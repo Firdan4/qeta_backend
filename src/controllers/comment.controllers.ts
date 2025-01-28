@@ -4,25 +4,63 @@ import { TRequest } from "../types";
 import Comment from "../db/models/comment";
 import User from "../db/models/user";
 import Post from "../db/models/post";
-import { getComment, getCommentCount } from "../services/commentServices";
+import {
+  getComment,
+  getCommentCount,
+  getReplyCount,
+} from "../services/commentServices";
 
 export const getComments = async (req: TRequest, res: Response) => {
-  const postId = req.params.postId;
+  const { postId } = req.params;
+  const { _limit, _page } = req.query;
+
+  const limit = Number(_limit as string);
+  const page = Number(_page as string);
+  const offset = (page - 1) * limit;
+
+  // console.log("page", page);
 
   try {
-    const [comments, count] = await Promise.all([
-      getComment(postId),
+    const [comments, commentCount] = await Promise.all([
+      getComment(postId, limit, offset),
       getCommentCount(postId),
     ]);
 
+    const totalPages = Math.ceil(commentCount / limit);
+
     const data = {
-      comments: comments,
-      commentCount: count,
+      comments,
+      commentCount,
+      totalPages,
+      currentPage: page,
     };
 
     return res.status(200).send({
       status: "success",
-      message: "Get Comments Succesfully",
+      message: "Get Comments Successfully",
+      data,
+    });
+  } catch (error: any) {
+    return res.status(error.status || 500).send({
+      status: "failed",
+      message: error.message || "Internal Error!",
+    });
+  }
+};
+
+export const fetchReplyCount = async (req: TRequest, res: Response) => {
+  const { parentId } = req.params;
+
+  try {
+    const replyCount = await getReplyCount(parentId);
+
+    const data = {
+      replyCount,
+    };
+
+    return res.status(200).send({
+      status: "success",
+      message: "Get Reply Count Successfully",
       data,
     });
   } catch (error: any) {
