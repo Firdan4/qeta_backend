@@ -31,7 +31,13 @@ export const getAllUser = async (email: string) => {
 
 export const getUserById = async (id: number | string) => {
   const user = await User.findByPk(id, {
-    attributes: ["firstName", "lastName", "displayName", "verifiedAccount"],
+    attributes: [
+      "firstName",
+      "lastName",
+      "displayName",
+      "photoURL",
+      "verifiedAccount",
+    ],
   });
   return user;
 };

@@ -7,6 +7,8 @@ import followRouter from "./follow.routes";
 import commentRouter from "./comment.routes";
 import commentLikeRouter from "./commentLike.routes";
 import replyRouter from "./reply.routes";
+import conversationRouter from "./conversation.routes";
+import messageRouter from "./message.routes";
 
 const router = Router();
 
@@ -18,5 +20,7 @@ router.use("/follow", followRouter);
 router.use("/comment", commentRouter);
 router.use("/comment-like", commentLikeRouter);
 router.use("/reply", replyRouter);
+router.use("/conversation", conversationRouter);
+router.use("/message", messageRouter);
 
 export default router;
